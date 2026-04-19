@@ -1,5 +1,6 @@
 import { BriefcaseBusiness, Globe, Linkedin, Mail, MapPin, Phone, User } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const PersonalInfoForm = ({ data = {}, onChange, removeBackground, setRemoveBackground }) => {
   const [formData, setFormData] = useState({
@@ -35,9 +36,8 @@ const PersonalInfoForm = ({ data = {}, onChange, removeBackground, setRemoveBack
     console.log('📥 PersonalInfoForm received data:', data); // Debug log
     
     if (data && Object.keys(data).length > 0) {
-      // Filter out empty strings and only update with actual values
       const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([key, value]) => value !== "" && value !== null)
+        Object.entries(data).filter(([, value]) => value !== "" && value !== null)
       );
       
       setFormData(prev => ({ 
@@ -127,10 +127,7 @@ const handleImageChange = (e) => {
     
     onChange(updatedPersonalInfo);
     
-    // Create preview
-    const previewUrl = URL.createObjectURL(file);
-    console.log('👀 Preview URL created');
-    console.log('========== IMAGE SELECTED END ==========');
+    console.log('👀 Processed IMAGE SELECTED END');
   }
 };
   const fields = [

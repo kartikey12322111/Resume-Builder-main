@@ -1,34 +1,28 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-let openai;
+let genAI;
 
 // Check if API key exists
-if (!process.env.OPENAI_API_KEY) {
-  console.warn("⚠️ OPENAI_API_KEY not found! Using mock OpenAI for development.");
+if (!process.env.GEMINI_API_KEY) {
+  console.warn("⚠️ GEMINI_API_KEY not found! Using mock AI for development.");
   
-  // Create a mock OpenAI instance
-  openai = {
-    chat: {
-      completions: {
-        create: async ({ messages }) => {
-          console.log("📝 Mock OpenAI called");
-          return {
-            choices: [{
-              message: {
-                content: "This is a mock response. Please add OPENAI_API_KEY to .env file for real AI features."
-              }
-            }]
-          };
-        }
+  // Create a mock instance
+  genAI = {
+    getGenerativeModel: () => ({
+      generateContent: async () => {
+        console.log("📝 Mock Gemini called");
+        return {
+          response: {
+            text: () => "This is a mock response. Please add GEMINI_API_KEY to .env file for real AI features."
+          }
+        };
       }
-    }
+    })
   };
 } else {
-  // Real OpenAI instance
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-  });
-  console.log("✅ OpenAI initialized successfully");
+  // Real Gemini instance
+  genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  console.log("✅ Gemini AI initialized successfully");
 }
 
-export default openai;
+export default genAI;

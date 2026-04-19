@@ -2,6 +2,7 @@ import { Briefcase, Loader2, Plus, Sparkles, Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import api from '../configs/api'
+import toast from 'react-hot-toast'
 const ExperienceForm = ({data, onChange}) => {
 
     const { token } = useSelector(state => state.auth)

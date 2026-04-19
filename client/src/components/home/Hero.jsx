@@ -1,26 +1,32 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { FileText } from 'lucide-react';
 
 const Hero = () => {
     const { user } = useSelector(state => state.auth)
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     const logos = [
-        'https://saasly.prebuiltui.com/assets/companies-logo/instagram.svg',
-        'https://saasly.prebuiltui.com/assets/companies-logo/framer.svg',
-        'https://saasly.prebuiltui.com/assets/companies-logo/microsoft.svg',
-        'https://saasly.prebuiltui.com/assets/companies-logo/huawei.svg',
-        'https://saasly.prebuiltui.com/assets/companies-logo/walmart.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/b/b9/Slack_Technologies_Logo.svg'
     ]
   return (
     <>
             <div className="min-h-screen pb-20">
                 {/* Navbar */}
                 <nav className="z-50 flex items-center justify-between w-full py-4 px-6 md:px-16 lg:px-24 xl:px-40 text-sm">
-                    <a href="https://prebuiltui.com">
-                        <img src="/logo.svg" alt="" className="h-11 w-auto"/> 
-                    </a>
+                    <Link to="/" className="flex items-center gap-2 md:gap-3 group">
+                        <div className="bg-gradient-to-br from-green-500 to-green-700 p-2 md:p-2.5 rounded-xl shadow-md group-hover:shadow-lg group-hover:shadow-green-500/40 transition-all duration-300 hover:-translate-y-0.5">
+                            <FileText className="text-white size-6 md:size-8" strokeWidth={2.5} />
+                        </div>
+                        <span className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-800">
+                            Resume<span className="text-green-600">Builder</span>
+                        </span>
+                    </Link>
 
                     <div className="hidden md:flex items-center gap-8 transition duration-500 text-slate-800">
                         <a href="#" className="hover:text-green-600 transition">Home</a>
@@ -84,8 +90,8 @@ const Hero = () => {
                             <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200" alt="user3" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[1]" />
                             <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200" alt="user1" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-2" />
                             <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200" alt="user2" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[3]" />
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200" alt="user3" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[4]" />
-                            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="user5" className="size-8 rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[5]" />
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200" alt="user4" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[4]" />
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200" alt="user5" className="size-8 object-cover rounded-full border-2 border-white hover:-translate-y-0.5 transition z-[5]" />
                         </div>
 
                         <div>
@@ -121,8 +127,10 @@ const Hero = () => {
 
                     <p className="py-6 text-slate-600 mt-14">Trusting by leading brands, including</p>
 
-                    <div className="flex flex-wrap justify-between max-sm:justify-center gap-6 max-w-3xl w-full mx-auto py-4" id="logo-container">
-                        {logos.map((logo, index) => <img key={index} src={logo} alt="logo" className="h-6 w-auto max-w-xs" />)}
+                    <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 max-w-5xl w-full mx-auto py-10 mt-4" id="logo-container">
+                        {logos.map((logo, index) => (
+                            <img key={index} src={logo} alt="brand-logo" className="h-7 md:h-10 lg:h-11 w-auto object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-500 hover:scale-110 drop-shadow-sm" />
+                        ))}
                     </div>
                 </div>
             </div>

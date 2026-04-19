@@ -5,12 +5,14 @@ import { login } from '../app/features/authSlice'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
     const dispatch = useDispatch()
-  const query = new URLSearchParams(window.location.search)
-  const urlState = query.get('state')
-  const [state, setState] = React.useState(urlState || "login")
+    const navigate = useNavigate()
+    const query = new URLSearchParams(window.location.search)
+    const urlState = query.get('state')
+    const [state, setState] = React.useState(urlState || "login")
 
     const [formData, setFormData] = React.useState({
         name: '',
@@ -24,9 +26,10 @@ const Login = () => {
             const { data } = await api.post(`/api/users/${state}`, formData)
             dispatch(login(data))
             localStorage.setItem('token', data.token)
-            toast.success(data.message)
+            toast.success(state === 'login' ? 'Logged in successfully' : 'Registered successfully')
+            navigate('/app')
         }catch(error){
-            toast(error?.response?.data?.message || error.message)
+            toast.error(error?.response?.data?.message || error.message)
         }
     }
 

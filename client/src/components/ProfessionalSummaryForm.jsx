@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 
 
 
-const ProfessionalSummaryForm = ({data, onChange, setResumeData}) => {
+const ProfessionalSummaryForm = ({data, onChange}) => {
 
   const { token } = useSelector(state => state.auth)
   const [isGenerating, setIsGenerating] = useState(false)

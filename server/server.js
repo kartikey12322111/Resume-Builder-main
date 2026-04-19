@@ -1,18 +1,27 @@
+import "dotenv/config";
 import express from "express";
-import dotenv from "dotenv";
 import connectDB from "./configs/db.js";
 import userRouter from "./routes/userRoutes.js";
 import resumeRouter from "./routes/resumeRoutes.js";
-import aiRouter from "./routes/aiRoutes.js";  // ✅ AI ROUTES IMPORT
+import aiRouter from "./routes/aiRoutes.js";
 import cors from "cors";
-
-dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173", 
+  process.env.CLIENT_URL
+].filter(Boolean);
+
 // CORS setup
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: function(origin, callback) {
+    if(!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 

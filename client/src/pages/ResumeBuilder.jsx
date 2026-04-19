@@ -135,6 +135,7 @@ const loadExistingResume = async () => {
 
   useEffect(() => {
     if (resumeId) loadExistingResume();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resumeId]);
 
     useEffect(() => {

@@ -1,13 +1,20 @@
 import React from 'react'
+import { FileText } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
     <>
     <footer className="flex flex-wrap justify-center lg:justify-between overflow-hidden gap-10 md:gap-20 py-16 px-6 md:px-16 lg:px-24 xl:px-32 text-[13px] text-gray-500 bg-gradient-to-r from-white via-green-200/60 to-white mt-40">
                 <div className="flex flex-wrap items-start gap-10 md:gap-[60px] xl:gap-[140px]">
-                    <a href="#">
-                        <img src="/logo.svg" alt="PrebuiltUI Logo" className="h-11 w-auto"/>
-                    </a>
+                    <Link to="/" className="flex items-center gap-2 md:gap-3 group">
+                        <div className="bg-gradient-to-br from-green-500 to-green-700 p-2 md:p-2.5 rounded-xl shadow-md group-hover:shadow-lg group-hover:shadow-green-500/40 transition-all duration-300 hover:-translate-y-0.5">
+                            <FileText className="text-white size-6 md:size-8" strokeWidth={2.5} />
+                        </div>
+                        <span className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-800">
+                            Resume<span className="text-green-600">Builder</span>
+                        </span>
+                    </Link>
                     <div>
                         <p className="text-slate-800 font-semibold">Product</p>
                         <ul className="mt-2 space-y-2">

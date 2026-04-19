@@ -15,25 +15,14 @@ export const enhanceProfessionalSummary = async (req, res) => {
             });
         }
 
-        console.log("Enhancing professional summary...");
+        console.log("Enhancing professional summary with Gemini...");
         
-        const response = await ai.chat.completions.create({
-            model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
-            messages: [
-                { 
-                    role: "system", 
-                    content: "You are an expert in resume writing. Your task is to enhance the professional summary of a resume. The summary should be 1-2 sentences highlighting key skills, experience, and career objectives. Make it compelling and ATS-friendly. Only return the enhanced text, no explanations or additional content." 
-                },
-                {
-                    role: "user",
-                    content: userContent,
-                },
-            ],
-            max_tokens: 200,
-            temperature: 0.7
-        });
+        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const systemInstruction = "You are an expert in resume writing. Your task is to enhance the professional summary of a resume. The summary should be 1-2 sentences highlighting key skills, experience, and career objectives. Make it compelling and ATS-friendly. Only return the enhanced text, no explanations or additional content.";
+        const prompt = `INSTRUCTIONS: ${systemInstruction}\n\nORIGINAL TEXT:\n${userContent}`;
 
-        const enhancedContent = response.choices[0].message.content;
+        const result = await model.generateContent(prompt);
+        const enhancedContent = result.response.text();
         
         return res.status(200).json({ 
             success: true,
@@ -63,25 +52,14 @@ export const enhanceJobDescription = async (req, res) => {
             });
         }
 
-        console.log("Enhancing job description...");
+        console.log("Enhancing job description with Gemini...");
         
-        const response = await ai.chat.completions.create({
-            model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
-            messages: [
-                { 
-                    role: "system", 
-                    content: "You are an expert in resume writing. Your task is to enhance the job description of a resume. The job description should be 2-3 sentences highlighting key responsibilities, achievements, and impact. Use action verbs and quantifiable results where possible. Make it ATS-friendly. Only return the enhanced text, no explanations or additional content." 
-                },
-                {
-                    role: "user",
-                    content: userContent,
-                },
-            ],
-            max_tokens: 300,
-            temperature: 0.7
-        });
+        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const systemInstruction = "You are an expert in resume writing. Your task is to enhance the job description of a resume. The job description should be 2-3 sentences highlighting key responsibilities, achievements, and impact. Use action verbs and quantifiable results where possible. Make it ATS-friendly. Only return the enhanced text, no explanations or additional content.";
+        const prompt = `INSTRUCTIONS: ${systemInstruction}\n\nORIGINAL TEXT:\n${userContent}`;
 
-        const enhancedContent = response.choices[0].message.content;
+        const result = await model.generateContent(prompt);
+        const enhancedContent = result.response.text();
         
         return res.status(200).json({ 
             success: true,
@@ -137,13 +115,12 @@ export const uploadResume = async (req, res) => {
         console.log(`✅ Processing resume: "${title}" for user: ${userId}`);
         console.log(`📄 Resume text length: ${resumeText.length} characters`);
 
-        // Check if OpenAI is configured
-        const isAIConfigured = process.env.OPENAI_API_KEY && 
-                              process.env.OPENAI_API_KEY.startsWith('sk-') &&
-                              process.env.OPENAI_API_KEY.length > 20;
+        // Check if Gemini is configured
+        const isAIConfigured = process.env.GEMINI_API_KEY && 
+                              process.env.GEMINI_API_KEY.length > 20;
 
         if (!isAIConfigured) {
-            console.warn("⚠️ OpenAI API key not configured properly. Using mock data.");
+            console.warn("⚠️ Gemini API key not configured properly. Using mock data.");
             
             // Create resume with mock data
             const mockResumeData = {
@@ -247,23 +224,20 @@ export const uploadResume = async (req, res) => {
 
         const userPrompt = `Extract data from this resume and return JSON:\n\n${resumeText.substring(0, 3000)}`;
 
-        console.log("🤖 Calling OpenAI API for resume parsing...");
+        console.log("🤖 Calling Gemini API for resume parsing...");
 
-        // Call OpenAI API
-        const response = await ai.chat.completions.create({
-            model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
-            messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt },
-            ],
-            max_tokens: 2000,
-            temperature: 0.3,
+        // Call Gemini API
+        const model = ai.getGenerativeModel({ 
+            model: "gemini-2.5-flash",
+            generationConfig: { temperature: 0.3 }
         });
+        const prompt = `System Prompt: ${systemPrompt}\n\nUser Input: ${userPrompt}`;
 
-        console.log("✅ OpenAI response received");
+        const response = await model.generateContent(prompt);
+        console.log("✅ Gemini response received");
 
         // Extract and parse JSON from response
-        let extractedData = response.choices[0].message.content;
+        let extractedData = response.response.text();
         
         // Clean up the response - remove markdown code blocks if present
         extractedData = extractedData.replace(/```json\s*/g, '');
@@ -374,32 +348,25 @@ export const testAIConnection = async (req, res) => {
     try {
         console.log("🧪 Testing AI connection...");
         
-        const isAIConfigured = process.env.OPENAI_API_KEY && 
-                              process.env.OPENAI_API_KEY.startsWith('sk-');
+        const isAIConfigured = process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.length > 20;
 
         if (!isAIConfigured) {
             return res.status(200).json({
                 success: true,
                 message: "AI is in mock mode (no API key configured)",
                 mode: "mock",
-                apiKeyPresent: !!process.env.OPENAI_API_KEY
+                apiKeyPresent: !!process.env.GEMINI_API_KEY
             });
         }
 
-        const response = await ai.chat.completions.create({
-            model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
-            messages: [
-                { role: "system", content: "You are a helpful assistant." },
-                { role: "user", content: "Say 'AI connection successful' if you receive this message." }
-            ],
-            max_tokens: 20
-        });
+        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const result = await model.generateContent("Say 'AI connection successful' if you receive this message.");
 
         return res.status(200).json({
             success: true,
             message: "AI connection successful",
             mode: "real",
-            response: response.choices[0].message.content
+            response: result.response.text()
         });
 
     } catch (error) {

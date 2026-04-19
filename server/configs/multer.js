@@ -31,13 +31,17 @@ const fileFilter = (req, file, cb) => {
   const allowedTypes = [
     'application/pdf', 
     'application/msword', 
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp'
   ];
   
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only PDF and DOC/DOCX files are allowed!'), false);
+    cb(new Error('Invalid file type. Only PDF, DOC/DOCX, and images are allowed!'), false);
   }
 };
 

@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import {FilePenLineIcon, PlusIcon, TrashIcon, UploadCloudIcon, PencilIcon, XIcon, UploadCloud, LoaderCircleIcon} from 'lucide-react'
-import { dummyResumeData } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'   
 import { useSelector } from 'react-redux'
 import api from '../configs/api'
 import  toast  from 'react-hot-toast'
 import pdfToText from 'react-pdftotext'
 const Dashboard = () => {
-  const {user, token} = useSelector(state=> state.auth)
+  const {token} = useSelector(state=> state.auth)
   const colors = ["#9333ea", "#d97706", "#dc2626", "#0284c7", "#16a34a"]
   const[allResumes, setAllResumes] = useState([])
   const[showCreateResume, setShowCreateResume] = useState(false)
@@ -109,22 +108,22 @@ const uploadResume = async (event) => {
   }
 
   const deleteResume = async(resumeId)=>{
+    const confirmDelete = window.confirm('Are you sure you want to delete this resume?')
+    if(!confirmDelete) return;
+
     try {
-      const confirm = window.confirm('Are you sure you want to delete this resume?')
-    } catch (error) {
-toast.error(error?.response?.data?.message || error.message)
-    }
-    
-    if(confirm){
       const {data} = await api.delete(`/api/resumes/delete/${resumeId}`, {
-      headers: {
-        Authorization: token }});
-        setAllResumes(allResumes.filter(resume => resume._id !== resumeId))
-        toast.success(data.message)
+        headers: { Authorization: token }
+      });
+      setAllResumes(allResumes.filter(resume => resume._id !== resumeId))
+      toast.success(data.message)
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message)
     }
   }
   useEffect(()=>{
     loadAllResumes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   return (

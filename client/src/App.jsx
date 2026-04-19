@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { login, setLoading } from './app/features/authSlice'
 import { Toaster } from 'react-hot-toast'
 import api from './configs/api'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const App = () => {
 
@@ -28,23 +29,30 @@ const App = () => {
         dispatch(setLoading(false))
       }
     }catch(error){
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('token');
+      }
       dispatch(setLoading(false))
-      console.log(error.message)
+      console.log("Authentication check:", error.message)
     }
   }
 
   useEffect(()=>{
     getUserData()
-},[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
   return (
     <>
     <Toaster/>
       <Routes>
         <Route path='/' element={<Home/>}/>
+        <Route path='/login' element={<Login/>}/>
 
-        <Route path='app' element={<Layout/>}>
-          <Route index element={<Dashboard/>}/>
-          <Route path='builder/:resumeId' element={<ResumeBuilder/>}/>
+        <Route element={<ProtectedRoute/>}>
+          <Route path='app' element={<Layout/>}>
+            <Route index element={<Dashboard/>}/>
+            <Route path='builder/:resumeId' element={<ResumeBuilder/>}/>
+          </Route>
         </Route>
 
         <Route path='view/:resumeId' element={<Preview/>}/>
